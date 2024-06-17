@@ -24,4 +24,26 @@ class ProductRepositoryImpl(ProductRepository):
         return Product.objects.all().order_by('productName')
 
 
+    def create(self, productName, productPrice, writer, content, productImage):
+        uploadDirectory='../../DoC-Vue-Frontend/src/assets/images/uploadimages' # 안되면 고치기
+        os.makedirs(uploadDirectory, exist_ok=True)
+
+        imagePath = os.path.join(uploadDirectory, productImage.name)
+        with open(imagePath, 'wb+') as destination:
+            for chunk in productImage.chunks():
+                destination.write(chunk)
+
+        product = Product(
+            productName=productName,
+            content=content,
+            writer=writer,
+            productPrice =productPrice,
+            productImage=productImage.name
+        )
+        product.save()
+        return product
+
+
+
+
 
