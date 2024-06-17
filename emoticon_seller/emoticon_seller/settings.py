@@ -24,6 +24,28 @@ SECRET_KEY = "django-insecure-ftf5i=g_w+8cn)hhu&7qchs()eg(e@+aexpnb(vrr-h10^#@x4
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# CORS 헤더와 메서드 추가 설정 (필요 시)
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS'
+]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
 
 ALLOWED_HOSTS = []
 
@@ -40,6 +62,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "board",
+    "product",
 ]
 
 MIDDLEWARE = [
