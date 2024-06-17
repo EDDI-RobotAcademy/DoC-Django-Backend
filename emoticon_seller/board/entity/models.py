@@ -14,4 +14,4 @@ class Board(models.Model):
         return self.boardTitle
 
     class Meta:
-        db_table = 'doc_board'
+        db_table = 'board'
