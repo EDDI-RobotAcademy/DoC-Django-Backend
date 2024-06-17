@@ -14,25 +14,3 @@ class ProductView(viewsets.ViewSet):
         productList = self.productService.list()
         serializer = ProductSerializer(productList, many=True)
         return Response(serializer.data)
-
-
-    def register (self, request):
-        try:
-            data = request.data
-
-            productImage = request.FILES.get('productImage')
-            productName = data.get('productName')
-            writer = data.get('writer')
-            productPrice = data.get('productPrice')
-            content = data.get('content')
-            if not all ([productImage, productName, writer,productPrice, content]):
-                return Response({'error': '모든 내용을 채워주세요!'}, status=status.HTTP_400_BAD_REQUEST)
-
-            self.productService.createProduct(productName, productPrice, writer, content, productImage)
-            serializer = ProductSerializer(data=request.data)
-            return Response(status=status.HTTP_200_OK)
-
-        except Exception as e:
-            print('상품 등록 과정 중 문제 발생: ', e)
-            return Response({'error':str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
