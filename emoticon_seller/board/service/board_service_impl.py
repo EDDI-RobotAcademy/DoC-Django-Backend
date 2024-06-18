@@ -21,3 +21,6 @@ class BoardServiceImpl(BoardService):
 
     def list(self):
         return self.__boardRepository.list()
+
+    def registerBoard(self, boardTitle, boardWriter, boardContent, boardImage):
+        return self.__boardRepository.register(boardTitle, boardWriter, boardContent, boardImage)
