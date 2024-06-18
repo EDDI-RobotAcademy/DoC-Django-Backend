@@ -9,3 +9,7 @@ class BoardRepository(ABC):
     @abstractmethod
     def register(self, boardTitle, boardWriter, boardContent, boardImage):
         pass
+
+    @abstractmethod
+    def findByBoardId(self, boardId):
+        pass
