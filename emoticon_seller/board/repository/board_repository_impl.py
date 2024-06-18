@@ -62,3 +62,8 @@ class BoardRepositoryImpl(BoardRepository):
         except Board.DoesNotExist:
             return None
 
+    def update(self, board, boardData):
+        for key, value in boardData.items():
+            setattr(board, key, value)
+        board.save()
+        return board
