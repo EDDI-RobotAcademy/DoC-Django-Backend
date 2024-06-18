@@ -57,4 +57,8 @@ class BoardRepositoryImpl(BoardRepository):
         return board
 
     def findByBoardId(self, boardId):
-        return Board.objects.get(boardId=boardId)
+        try:
+            return Board.objects.get(boardId=boardId)
+        except Board.DoesNotExist:
+            return None
+
