@@ -13,9 +13,7 @@ class BoardView(viewsets.ViewSet):
 
     def list(self, request):
         boardList = self.boardService.list()
-        print('boardList:', boardList)
         serializer = BoardSerializer(boardList, many=True)
-        print('serialized boardList:', serializer.data)
         return Response(serializer.data)
 
     def register(self, request):
@@ -42,3 +40,8 @@ class BoardView(viewsets.ViewSet):
         except Exception as e:
             print('게시글 등록 과정 중 문제 발생:', e)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    def read(self, request, pk=None):
+        board = self.boardService.readBoard(pk)
+        serializer = BoardSerializer(board)
+        return Response(serializer.data)

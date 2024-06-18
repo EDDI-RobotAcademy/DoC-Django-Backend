@@ -55,3 +55,10 @@ class BoardRepositoryImpl(BoardRepository):
             )
         board.save()
         return board
+
+    def findByBoardId(self, boardId):
+        try:
+            return Board.objects.get(boardId=boardId)
+        except Board.DoesNotExist:
+            return None
+
