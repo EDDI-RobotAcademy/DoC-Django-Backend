@@ -24,3 +24,6 @@ class BoardServiceImpl(BoardService):
 
     def registerBoard(self, boardTitle, boardWriter, boardContent, boardImage):
         return self.__boardRepository.register(boardTitle, boardWriter, boardContent, boardImage)
+
+    def readBoard(self, boardId):
+        return self.__boardRepository.findByBoardId(boardId)
