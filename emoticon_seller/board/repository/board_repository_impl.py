@@ -67,3 +67,7 @@ class BoardRepositoryImpl(BoardRepository):
             setattr(board, key, value)
         board.save()
         return board
+
+    def deleteByBoardID(self, boardId):
+        board = Board.objects.get(boardId=boardId)
+        board.delete()
