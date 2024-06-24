@@ -29,3 +29,16 @@ class ProfileRepositoryImpl(ProfileRepository):
             print(f'email 중복 검사 중 에러: {e}')
             return None
 
+    def findBynickname(self, nickname):
+        try:
+            profile = Profile.objects.get(nickname=nickname)
+            return profile
+        except Profile.DoesNotExist:
+            print('닉네임과 일치하는 계정이 없습니다')
+            return None
+        except Exception as e:
+            print(f"닉네임 중복 검사 중 오류 발생: {e}")
+            return None
+
+
+
