@@ -31,11 +31,10 @@ class BoardView(viewsets.ViewSet):
                 return Response({'error': '제목, 작성자, 내용은 필수입니다.'},
                                 status=status.HTTP_400_BAD_REQUEST)
 
-            self.boardService.registerBoard(boardTitle, boardWriter, boardContent, boardImage)
+            registeredBoard = self.boardService.registerBoard(boardTitle, boardWriter, boardContent, boardImage)
+            serializer = BoardSerializer(registeredBoard)
 
-            serializer = BoardSerializer(data=request.data)
-
-            return Response(status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
         except Exception as e:
             print('게시글 등록 과정 중 문제 발생:', e)
