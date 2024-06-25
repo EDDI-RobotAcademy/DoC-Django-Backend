@@ -18,7 +18,7 @@ class ProfileRepositoryImpl(ProfileRepository):
 
         return cls.__instance
 
-    def findByemail(self, email):
+    def findByEmail(self, email):
         try:
             profile = Profile.objects.get(email=email)
             return profile
@@ -29,7 +29,7 @@ class ProfileRepositoryImpl(ProfileRepository):
             print(f'email 중복 검사 중 에러: {e}')
             return None
 
-    def findBynickname(self, nickname):
+    def findByNickname(self, nickname):
         try:
             profile = Profile.objects.get(nickname=nickname)
             return profile
