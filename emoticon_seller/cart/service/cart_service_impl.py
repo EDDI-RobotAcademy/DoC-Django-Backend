@@ -35,7 +35,15 @@ class CartServiceImpl(CartService):
         print("기존 장바구니 사용")
 
         productId = cartData.get('productId')
-        cartItem = self.__cartItemRepository.findByProductId(productId)
+        cartItemList = self.__cartItemRepository.findAllByProductId(productId)
+
+        cartItem = None
+        for item in cartItemList:
+            cartFromCartItem = item.cart
+            accountFromCart = cartFromCartItem.account
+            if accountFromCart.id == account.id:
+                cartItem = item
+                break
         if cartItem is None:
             print("신규 상품 추가")
             product = self.__productRepository.findByProductId(productId)
@@ -46,37 +54,6 @@ class CartServiceImpl(CartService):
             cartItem.quantity += 1
             self.__cartItemRepository.update(cartItem)
 
-    def cartList(self, accountId):
-        account = self.__accountRepository.findById(accountId)
-        cart = self.__cartRepository.findByAccount(account)
-        print(f"cartList -> cart: {cart}")
-        cartItemList = self.__cartItemRepository.findByCart(cart)
-        print(f"cartList -> cartItemList: {cartItemList}")
-        cartItemListResponseForm = []
 
-        for cartItem in cartItemList:
-            cartItemResponseForm = {
-                'cartItemId': cartItem.cartItemId,
-                'productName': cartItem.product.productName,
-                'productPrice': cartItem.product.productPrice,
-                'productId': cartItem.product.productId,
-                'quantity': cartItem.quantity,
-            }
-            cartItemListResponseForm.append(cartItemResponseForm)
-
-        return cartItemListResponseForm
-
-    # def cartList(self, accountId):
-    #     return self.cartRepository.findByAccount(accountId)
-
-    # def cartList(self, accountId):
-    #     account = self.__accountRepository.findById(accountId)
-    #     print(f"cartList -> account:", account)
-    #     if account:
-    #         cart = self.__cartRepository.findByAccount(account)
-    #         print(f"cartList -> cart:", cart)
-    #         if cart:
-    #             return cart.items.all()
-    #     return []
 
 
