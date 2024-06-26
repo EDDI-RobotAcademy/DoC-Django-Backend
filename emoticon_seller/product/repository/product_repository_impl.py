@@ -25,7 +25,7 @@ class ProductRepositoryImpl(ProductRepository):
         return Product.objects.all().order_by('productName')
 
 
-    def create(self, productName, productPrice, writer, content, productImage):
+    def create(self, productName, productPrice, writer, productCategory, content, productImage):
         uploadDirectory='../../DoC-Vue-Frontend/src/assets/images/uploadimages'
         print('업로드된 디렉토리 : ', uploadDirectory)
         os.makedirs(uploadDirectory, exist_ok=True)
@@ -41,6 +41,7 @@ class ProductRepositoryImpl(ProductRepository):
             content=content,
             writer=writer,
             productPrice=productPrice,
+            productCategory=productCategory,
             productImage=productImage.name
         )
         product.save()
