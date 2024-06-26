@@ -21,5 +21,5 @@ class ReportServiceImpl(ReportService):
         account = self.__accountRepository.findById(accountId)  # 있음
         report = self.__reportRepository.findByAccount(account)
         if report is None:
-            report = self.__reportRepository.register(account, age, gender)
+            self.__reportRepository.register(account, age, gender)
         # print('이미 있는 report')
