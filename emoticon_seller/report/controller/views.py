@@ -14,14 +14,13 @@ class ReportView(viewsets.ViewSet):
         try:
             print('data: ', request.data)
             userToken = request.data.get('userToken')
-            data = request.data.get('data')
-            age = data.get('age')
-            gender = data.get('gender')
+            age = request.data.get('age')
+            gender = request.data.get('gender')
             # print('유저 토큰 : ', userToken)
             # print('age : ', age)
             # print('gender: ', gender)
             accountId = self.redisService.getValueByKey(userToken)
-            print('accountId: ', accountId)
+            # print('accountId: ', accountId)
             self.reportService.createReport(age, gender, accountId)
             return Response(status=status.HTTP_200_OK)
 
