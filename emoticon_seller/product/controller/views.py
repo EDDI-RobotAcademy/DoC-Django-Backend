@@ -24,15 +24,16 @@ class ProductView(viewsets.ViewSet):
             productName = data.get('productName')
             productPrice = data.get('productPrice')
             writer = data.get('writer')
+            productCategory = data.get('productCategory')
             content = data.get('content')
             print('writer가 잘 들어왔는지 확인 : ', writer)
             print('productImage: ', productImage.name)
 
-            if not all([productName, productPrice, writer, content, productImage]):
+            if not all([productName, productPrice, writer, productCategory, content, productImage]):
                 return Response({'error': '모든 내용을 채워주세요!'},
                                 status=status.HTTP_400_BAD_REQUEST)
 
-            self.productService.createProduct(productName, productPrice, writer, content, productImage)
+            self.productService.createProduct(productName, productPrice, writer, productCategory, content, productImage)
 
             serializer = ProductSerializer(data=request.data)
             return Response(status=status.HTTP_200_OK)

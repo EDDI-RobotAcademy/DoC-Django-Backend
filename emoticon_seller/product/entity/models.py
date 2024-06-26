@@ -4,6 +4,7 @@ class Product(models.Model):
     productId = models.AutoField(primary_key=True)
     productName = models.CharField(max_length=128, null=False)
     productPrice = models.IntegerField(null=False)
+    productCategory = models.CharField(max_length=10, null=False)
     writer = models.CharField(max_length=32, null=False)
     content = models.TextField()
     productImage = models.CharField(max_length=100) # 이미지 경로가 들어간다
