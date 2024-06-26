@@ -28,4 +28,4 @@ class ReportRepositoryImpl(ReportRepository):
 
     def register(self, account, age, gender):
         print('서베이 레포트 만들기')
-        report = Report.objects.create(account=account, age=age, gender=gender)
+        return Report.objects.create(account=account, age=age, gender=gender)
