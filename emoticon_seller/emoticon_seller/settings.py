@@ -47,7 +47,6 @@ CORS_ALLOW_HEADERS = [
 ]
 
 
-ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -83,6 +82,8 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS')
 
 KAKAO = {
     'LOGIN_URL': os.getenv('KAKAO_LOGIN_URL'),
