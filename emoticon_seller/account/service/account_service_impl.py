@@ -11,6 +11,7 @@ class AccountServiceImpl(AccountService):
             cls.__instance = super().__new__(cls)
             cls.__instance.__profileRepository = ProfileRepositoryImpl.getInstance()
             cls.__instance.__accountRepository = AccountRepositoryImpl.getInstance()
+
         return cls.__instance
 
     @classmethod
@@ -28,18 +29,10 @@ class AccountServiceImpl(AccountService):
         profile = self.__profileRepository.findByNickname(nickname)
         return profile is not None
 
-    def registerAccount(self, loginType, roleType, nickname, email):
-        account = self.__accountRepository.create(loginType,roleType)
-        return self.__profileRepository.create(nickname,email,account)
+    def registerAccount(self, loginType, roleType, nickname, email,business):
+        roleType = 'SELLER' if business else 'CUSTOMER'
+        account = self.__accountRepository.create(loginType, roleType)
+        return self.__profileRepository.create(nickname, email, account)
 
     def findAccountByEmail(self, email):
         return self.__profileRepository.findByEmail(email)
-
-
-
-
-
-
-
-
-
