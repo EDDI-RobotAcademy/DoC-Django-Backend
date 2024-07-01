@@ -64,7 +64,6 @@ INSTALLED_APPS = [
     'account',
     'cart',
     'report',
-    'django_extensions',
     'review'
 ]
 
