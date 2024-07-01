@@ -24,5 +24,6 @@ urlpatterns = [
     path('oauth/', include('oauth.urls')),
     path('account/', include('account.urls')),
     path('cart/', include('cart.urls')),
-    path('report/', include('report.urls'))
+    path('report/', include('report.urls')),
+    path('review/', include('review.urls'))
 ]
