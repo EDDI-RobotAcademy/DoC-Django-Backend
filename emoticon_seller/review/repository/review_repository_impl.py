@@ -58,3 +58,18 @@ class ReviewRepositoryImpl(ReviewRepository):
         review.save()
         return review
 
+    def findByReviewId(self, reviewId):
+        try:
+            return Review.objects.get(reviewId=reviewId)
+        except Review.DoesNotExist:
+            return None
+
+    def update(self, review, reviewData):
+        for key, value in reviewData.items():
+            setattr(review, key, value)
+        review.save()
+        return review
+
+    def deleteByReviewID(self, reviewId):
+        review = Review.objects.get(reviewId=reviewId)
+        review.delete()
