@@ -20,20 +20,24 @@ class ProductView(viewsets.ViewSet):
         try:
             data = request.data
 
-            productImage = request.FILES.get('productImage')
+            productTitleImage = request.FILES.get('productTitleImage')
+            productContentImage = request.FILES.get('productContentImage')
             productName = data.get('productName')
             productPrice = data.get('productPrice')
             writer = data.get('writer')
             productCategory = data.get('productCategory')
             content = data.get('content')
             print('writer가 잘 들어왔는지 확인 : ', writer)
-            print('productImage: ', productImage.name)
+            print('productTitleImage: ', productTitleImage.name)
+            print('productContentImage: ', productContentImage.name)
 
-            if not all([productName, productPrice, writer, productCategory, content, productImage]):
+            
+
+            if not all([productName, productPrice, writer, productCategory, content, productTitleImage,productContentImage]):
                 return Response({'error': '모든 내용을 채워주세요!'},
                                 status=status.HTTP_400_BAD_REQUEST)
 
-            self.productService.createProduct(productName, productPrice, writer, productCategory, content, productImage)
+            self.productService.createProduct(productName, productPrice, writer, productCategory, content, productTitleImage, productContentImage)
 
             serializer = ProductSerializer(data=request.data)
             return Response(status=status.HTTP_200_OK)

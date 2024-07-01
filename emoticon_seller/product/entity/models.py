@@ -7,7 +7,9 @@ class Product(models.Model):
     productCategory = models.CharField(max_length=10, null=False)
     writer = models.CharField(max_length=32, null=False)
     content = models.TextField()
-    productImage = models.CharField(max_length=100) # 이미지 경로가 들어간다
+    productTitleImage = models.CharField(max_length=100) # 이미지 경로가 들어간다
+    productContentImage = models.CharField(max_length=100)  # 이미지 경로가 들어간다
+
     # 추후 이미지 관련 필드 추가
     regDate = models.DateTimeField(auto_now_add=True)
     updDate = models.DateTimeField(auto_now=True)
