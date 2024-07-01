@@ -46,8 +46,7 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
 ]
 
-
-
+DEBUG = True
 
 # Application definition
 
@@ -64,7 +63,9 @@ INSTALLED_APPS = [
     "product",
     'account',
     'cart',
-    'report'
+    'report',
+    'django_extensions',
+    'review'
 ]
 
 MIDDLEWARE = [
