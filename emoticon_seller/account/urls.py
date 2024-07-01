@@ -20,4 +20,7 @@ urlpatterns = [
     path('nickname',
          AccountView.as_view({'post': 'getNickname'}),
          name='nickname-account'),
+    path('roleType',
+         AccountView.as_view({'post': 'getRoleType'}),
+         name='roleType-account'),
 ]
