@@ -10,3 +10,7 @@ class ReviewService(ABC):
     def registerReview(self, reviewTitle, reviewWriter, reviewContent,reviewRating,reviewImage):
         pass
 
+    @abstractmethod
+    def readReview(self, reviewId):
+        pass
+

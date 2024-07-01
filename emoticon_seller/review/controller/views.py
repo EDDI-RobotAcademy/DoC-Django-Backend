@@ -41,3 +41,8 @@ class ReviewView(viewsets.ViewSet):
             print('게시글 등록 과정 중 문제 발생:', e)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+    def read(self, request, pk=None):
+        review = self.reviewService.readReview(pk)
+        serializer = ReviewSerializer(review)
+        return Response(serializer.data)
+

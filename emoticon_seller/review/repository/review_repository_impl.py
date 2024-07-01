@@ -58,3 +58,9 @@ class ReviewRepositoryImpl(ReviewRepository):
         review.save()
         return review
 
+    def findByReviewId(self, reviewId):
+        try:
+            return Review.objects.get(reviewId=reviewId)
+        except Review.DoesNotExist:
+            return None
+

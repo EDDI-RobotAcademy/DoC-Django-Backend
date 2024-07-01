@@ -25,3 +25,6 @@ class ReviewServiceImpl(ReviewService):
     def registerReview(self, reviewTitle, reviewWriter, reviewContent,reviewRating,reviewImage):
         return self.__reviewRepository.register(reviewTitle, reviewWriter, reviewContent,reviewRating,reviewImage)
 
+    def readReview(self, reviewId):
+        return self.__reviewRepository.findByReviewId(reviewId)
+
