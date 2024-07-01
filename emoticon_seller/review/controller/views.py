@@ -41,21 +41,3 @@ class ReviewView(viewsets.ViewSet):
             print('게시글 등록 과정 중 문제 발생:', e)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    def read(self, request, pk=None):
-        review = self.reviewService.readReview(pk)
-        serializer = ReviewSerializer(review)
-        return Response(serializer.data)
-
-    def modifyReview(self, request, pk=None):
-        review = self.reviewService.readReview(pk)
-        serializer = ReviewSerializer(review, data=request.data, partial=True)
-
-        if serializer.is_valid():
-            updateReview = self.reviewService.updateReview(pk, serializer.validated_data)
-            return Response(ReviewSerializer(updateReview).data)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def removeReview(self, request, pk=None):
-        self.reviewService.removeReview(pk)
-        return Response(status=status.HTTP_204_NO_CONTENT)
