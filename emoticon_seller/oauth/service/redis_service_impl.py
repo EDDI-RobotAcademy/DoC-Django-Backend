@@ -47,7 +47,6 @@ class RedisServiceImpl(RedisService):
                 return True
 
             return False
-
         except Exception as e:
             print("redis key 삭제 중 에러 발생:", e)
             raise e
