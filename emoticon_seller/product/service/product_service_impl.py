@@ -21,8 +21,8 @@ class ProductServiceImpl(ProductService):
     def list(self):
         return self.__productRepository.list()
 
-    def createProduct(self, productName, productPrice, writer, productCategory, content, productImage):
-        return self.__productRepository.create(productName, productPrice, writer, productCategory, content, productImage)
+    def createProduct(self, productName, productPrice, writer, productCategory, content, productTitleImage,productContentImage):
+        return self.__productRepository.create(productName, productPrice, writer, productCategory, content, productTitleImage,productContentImage)
 
     def readProduct(self, productId):
         return self.__productRepository.findByProductId(productId)

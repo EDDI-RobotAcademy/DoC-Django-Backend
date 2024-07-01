@@ -9,5 +9,3 @@ urlpatterns = [
     path('', include(router.urls)),
     path('register', ReportView.as_view({'post': 'reportCreate'}), name='report-register'),
 ]
-
-# localhost:8000/board/list
