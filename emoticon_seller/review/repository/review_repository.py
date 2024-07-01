@@ -10,14 +10,3 @@ class ReviewRepository(ABC):
     def register(self, reviewTitle, reviewWriter, reviewContent,reviewRating ,reviewImage):
         pass
 
-    @abstractmethod
-    def findByReviewId(self, reviewId):
-        pass
-
-    @abstractmethod
-    def update(self, review, reviewData):
-        pass
-
-    @abstractmethod
-    def deleteByReviewID(self, reviewId):
-        pass
