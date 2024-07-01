@@ -49,11 +49,16 @@ class AccountView(viewsets.ViewSet):
             else:
                 roleType = 'CUSTOMER'
 
+            if business:
+                roletype = "SELLER"
+            else:
+                roletype = "CUSTOMER"
+
             account = self.accountService.registerAccount(
                 loginType='KAKAO',
-                roleType=roleType,
+                roleType=roletype,
                 nickname=nickname,
-                email=email,
+                email=email
             )
 
             serializer = AccountSerializer(account)

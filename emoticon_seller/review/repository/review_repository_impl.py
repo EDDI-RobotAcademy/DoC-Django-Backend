@@ -23,3 +23,38 @@ class ReviewRepositoryImpl(ReviewRepository):
 
     def list(self):
         return Review.objects.all().order_by('reviewRegDate')
+
+    def register(self, reviewTitle, reviewWriter, reviewContent,reviewRating,reviewImage):
+        uploadDirectory = os.path.join(
+            settings.BASE_DIR,
+            '../../DoC-Vue-Frontend/src/assets/images/uploadImages'
+        )
+        if not os.path.exists(uploadDirectory):
+            os.makedirs(uploadDirectory)
+        if reviewImage:
+            imagePath = os.path.join(uploadDirectory, reviewImage.name)
+            with open(imagePath, 'wb+') as destination:
+                for chunk in reviewImage.chunks():
+                    destination.write(chunk)
+
+                destination.flush()
+                os.fsync(destination.fileno())
+
+            review = Review(
+                reviewTitle=reviewTitle,
+                reviewWriter=reviewWriter,
+                reviewContent=reviewContent,
+                reviewRating=reviewRating,
+                reviewImage=reviewImage.name,
+            )
+        else:
+            review = Review(
+                reviewTitle=reviewTitle,
+                reviewWriter=reviewWriter,
+                reviewContent=reviewContent,
+                reviewRating=reviewRating,
+                reviewImage=None,
+            )
+        review.save()
+        return review
+

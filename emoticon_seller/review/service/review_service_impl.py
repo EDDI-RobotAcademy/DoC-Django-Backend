@@ -22,3 +22,6 @@ class ReviewServiceImpl(ReviewService):
     def list(self):
         return self.__reviewRepository.list()
 
+    def registerReview(self, reviewTitle, reviewWriter, reviewContent,reviewRating,reviewImage):
+        return self.__reviewRepository.register(reviewTitle, reviewWriter, reviewContent,reviewRating,reviewImage)
+
