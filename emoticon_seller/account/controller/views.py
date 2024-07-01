@@ -53,7 +53,7 @@ class AccountView(viewsets.ViewSet):
 
             account = self.accountService.registerAccount(
                 loginType='KAKAO',
-                roleType=roletype,
+                roleType=roleType,
                 nickname=nickname,
                 email=email
             )
