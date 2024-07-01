@@ -14,3 +14,10 @@ class ReviewService(ABC):
     def readReview(self, reviewId):
         pass
 
+    @abstractmethod
+    def updateReview(self, reviewId, reviewData):
+        pass
+
+    @abstractmethod
+    def removeReview(self, reviewId):
+        pass

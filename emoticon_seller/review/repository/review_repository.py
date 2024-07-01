@@ -14,3 +14,10 @@ class ReviewRepository(ABC):
     def findByReviewId(self, reviewId):
         pass
 
+    @abstractmethod
+    def update(self, review, reviewData):
+        pass
+
+    @abstractmethod
+    def deleteByReviewID(self, reviewId):
+        pass
