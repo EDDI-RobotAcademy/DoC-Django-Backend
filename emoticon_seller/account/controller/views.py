@@ -5,10 +5,12 @@ from account.repository.account_role_type_repository_impl import AccountRoleType
 from account.repository.profile_repository_impl import ProfileRepositoryImpl
 from account.serializers import AccountSerializer
 from account.service.account_service_impl import AccountServiceImpl
+from oauth.service.redis_service_impl import RedisServiceImpl
 
 
 class AccountView(viewsets.ViewSet):
     accountService = AccountServiceImpl.getInstance()
+    redisService = RedisServiceImpl.getInstance()
     profileRepository = ProfileRepositoryImpl.getInstance()
     accountRoleTypeRepository = AccountRoleTypeRepositoryImpl.getInstance()
 
@@ -64,21 +66,32 @@ class AccountView(viewsets.ViewSet):
             print("계정 생성 중 에러 발생:", e)
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
+    # def getNickname(self, request):
+    #     email = request.data.get('email')
+    #     print(f"email: {email}")
+    #     profile = self.profileRepository.findByEmail(email)
+    #     nickname = profile.nickname
+    #     return Response(nickname, status=status.HTTP_200_OK)
+
     def getNickname(self, request):
-        email = request.data.get('email')
-        print(f"email: {email}")
-        profile = self.profileRepository.findByEmail(email)
+        userToken = request.data.get('userToken')
+        if not userToken:
+            return Response(None, status=status.HTTP_200_OK)
+        # print(f"userToken: {userToken}")
+        accountId = self.redisService.getValueByKey(userToken)
+        # print(f"accountId: {accountId}")
+        profile = self.profileRepository.findById(accountId)
+        # print(f"profile: {profile}")
         nickname = profile.nickname
         return Response(nickname, status=status.HTTP_200_OK)
 
     def getRoleType(self, request):
-        email = request.data.get('email')
-        print(f"email: {email}")
-
-        profile = self.profileRepository.findByEmail(email)
-        accountId = profile.account_id
-        print(f"accountId: {accountId}")
-
+        userToken = request.data.get('userToken')
+        if not userToken:
+            return Response(None, status=status.HTTP_200_OK)
+        # print(f"userToken: {userToken}")
+        accountId = self.redisService.getValueByKey(userToken)
+        # print(f"accountId: {accountId}")
         account = self.accountService.findAccountById(accountId)
         print(f"account: {account}")
         accountRoleTypeId = account.roleType_id

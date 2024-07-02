@@ -40,6 +40,18 @@ class ProfileRepositoryImpl(ProfileRepository):
             print(f"닉네임 중복 검사 중 오류 발생: {e}")
             return None
 
+    def findById(self, accountId):
+        try:
+            profile = Profile.objects.get(account_id=accountId)
+            return profile
+        except Profile.DoesNotExist:
+            print('accountId와 일치하는 계정이 없습니다')
+            return None
+        except Exception as e:
+            print(f"accountId로 계정 찾는 중 에러 발생: {e}")
+            return None
+
+
     def create(self, nickname, email, account):
         profile = Profile.objects.create(nickname=nickname, email=email, account=account)
         return profile
