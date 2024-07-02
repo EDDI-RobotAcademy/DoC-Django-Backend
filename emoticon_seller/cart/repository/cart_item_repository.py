@@ -21,3 +21,7 @@ class CartItemRepository(ABC):
     @abstractmethod
     def update(self, cartItem):
         pass
+
+    @abstractmethod
+    def deleteByCartItemId(self, cartItemId):
+        pass

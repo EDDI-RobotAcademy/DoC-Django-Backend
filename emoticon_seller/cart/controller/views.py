@@ -39,3 +39,7 @@ class CartView(viewsets.ViewSet):
             print('상품 등록 과정 중 문제 발생:', e)
             return Response({ 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+    def removeCartItem(self, request, pk=None):
+        self.cartService.removeCartItem(pk)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
