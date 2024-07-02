@@ -44,3 +44,7 @@ class CartItemRepositoryImpl(CartItemRepository):
 
     def update(self, cartItem):
         cartItem.save()
+
+    def deleteByCartItemId(self, cartItemId):
+        cartItem = CartItem.objects.get(cartItemId=cartItemId)
+        cartItem.delete()

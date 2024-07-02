@@ -75,6 +75,9 @@ class CartServiceImpl(CartService):
 
         return cartItemListResponseForm
 
+    def removeCartItem(self, cartItemId):
+        self.__cartItemRepository.deleteByCartItemId(cartItemId)
+
 
 
 
