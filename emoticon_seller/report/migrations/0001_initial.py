@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Report",
             fields=[
-                ("reportId", models.AutoField(primary_key=True, serialize=False)),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
                 ("age", models.PositiveIntegerField()),
                 ("gender", models.CharField(max_length=3)),
                 (
