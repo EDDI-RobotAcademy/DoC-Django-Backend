@@ -42,9 +42,14 @@ class CartItemRepositoryImpl(CartItemRepository):
     def findAllByProductId(self, productId):
         return CartItem.objects.filter(product_id=productId)
 
+    def findById(self, id):
+        return CartItem.objects.get(cartItemId=id)
+
     def update(self, cartItem):
         cartItem.save()
 
     def deleteByCartItemId(self, cartItemId):
         cartItem = CartItem.objects.get(cartItemId=cartItemId)
         cartItem.delete()
+
+

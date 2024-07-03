@@ -19,6 +19,10 @@ class CartItemRepository(ABC):
         pass
 
     @abstractmethod
+    def findById(self, id):
+        pass
+
+    @abstractmethod
     def update(self, cartItem):
         pass
 
