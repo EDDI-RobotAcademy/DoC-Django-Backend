@@ -15,6 +15,7 @@ class CartItem(models.Model):
         return (f"CartItem -> id: {self.cartItemId}, "
                 f"cart: {self.cart.cartId}, "
                 f"product: {self.product.productName}, "
+                f"productTitleImage: {self.product.productTitleImage},"
                 f"quantity: {self.quantity}")
 
     class Meta:
