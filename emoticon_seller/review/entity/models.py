@@ -1,8 +1,11 @@
 from django.db import models
 
+from product.entity.models import Product
+
 
 class Review(models.Model):
     reviewId = models.AutoField(primary_key=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
     reviewTitle = models.CharField(max_length=128, null=False)
     reviewWriter = models.CharField(max_length=32, null=False)
     reviewContent = models.TextField()

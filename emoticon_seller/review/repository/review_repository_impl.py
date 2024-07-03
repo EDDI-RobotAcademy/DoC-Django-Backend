@@ -24,7 +24,7 @@ class ReviewRepositoryImpl(ReviewRepository):
     def list(self):
         return Review.objects.all().order_by('reviewRegDate')
 
-    def register(self, reviewTitle, reviewWriter, reviewContent,reviewRating,reviewImage):
+    def register(self, product, reviewTitle, reviewWriter, reviewContent, reviewRating, reviewImage):
         uploadDirectory = os.path.join(
             settings.BASE_DIR,
             '../../DoC-Vue-Frontend/src/assets/images/uploadImages'
@@ -41,6 +41,7 @@ class ReviewRepositoryImpl(ReviewRepository):
                 os.fsync(destination.fileno())
 
             review = Review(
+                product=product,
                 reviewTitle=reviewTitle,
                 reviewWriter=reviewWriter,
                 reviewContent=reviewContent,
@@ -49,6 +50,7 @@ class ReviewRepositoryImpl(ReviewRepository):
             )
         else:
             review = Review(
+                product=product,
                 reviewTitle=reviewTitle,
                 reviewWriter=reviewWriter,
                 reviewContent=reviewContent,
