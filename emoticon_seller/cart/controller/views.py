@@ -42,19 +42,15 @@ class CartView(viewsets.ViewSet):
 
     def removeCartItem(self, request):
         data = request.data
-        
+
         if list(data.keys())[0] == 'productId':
             cartItemList = CartItem.objects.all()
             for cartItem in cartItemList:
                 if cartItem.product.productId == data['productId'][0]:
-                    print(cartItem.cartItemId)
                     self.cartService.removeCartItem([cartItem.cartItemId])
 
-        if list(data.keys())[0] == 'DeletedCartItemId':
-            self.cartService.removeCartItem(data['DeletedCartItemId'])
-
-        if list(data.keys())[0] == 'orderedCartItemIdList':
-            self.cartService.removeCartItem(data['orderedCartItemIdList'])
+        if list(data.keys())[0] == 'CartItemId':
+            self.cartService.removeCartItem(data['CartItemId'])
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
