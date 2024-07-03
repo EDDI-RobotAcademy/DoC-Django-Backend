@@ -17,6 +17,6 @@ class OrdersItemRepositoryImpl(OrdersItemRepository):
 
         return cls.__instance
 
-    def create(self, orders, product, price, quantity):
-        orderItem = OrdersItem(orders=orders, product=product, price=price, quantity=quantity)
+    def create(self, orders, product, price):
+        orderItem = OrdersItem(orders=orders, product=product, price=price)
         orderItem.save()

@@ -34,11 +34,9 @@ class OrdersServiceImpl(OrdersService):
                     orders,
                     cartItem.product,
                     item['orderPrice'],
-                    item['quantity']
                 )
 
             return orders.id
-
         except Exception as e:
             print('Error creating order:', e)
             raise e
@@ -50,11 +48,9 @@ class OrdersServiceImpl(OrdersService):
                 orders,
                 orderItem['product'],
                 orderItem['productPrice'],
-                orderItem['quantity'],
             )
 
             return orders.id
-
         except Exception as e:
             print('Error creating order:', e)
             raise e
