@@ -68,6 +68,7 @@ class CartServiceImpl(CartService):
                 'cartItemId': cartItem.cartItemId,
                 'productName': cartItem.product.productName,
                 'productPrice': cartItem.product.productPrice,
+                'productTitleImage': cartItem.product.productTitleImage,
                 'productId': cartItem.product.productId,
                 'quantity': cartItem.quantity,
             }
