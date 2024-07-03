@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
+from cart.entity.cart_item import CartItem
 from cart.service.cart_service_impl import CartServiceImpl
 from oauth.service.redis_service_impl import RedisServiceImpl
 
@@ -39,7 +40,21 @@ class CartView(viewsets.ViewSet):
             print('상품 등록 과정 중 문제 발생:', e)
             return Response({ 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    def removeCartItem(self, request, pk=None):
-        self.cartService.removeCartItem(pk)
+    def removeCartItem(self, request):
+        data = request.data
+        
+        if list(data.keys())[0] == 'productId':
+            cartItemList = CartItem.objects.all()
+            for cartItem in cartItemList:
+                if cartItem.product.productId == data['productId'][0]:
+                    print(cartItem.cartItemId)
+                    self.cartService.removeCartItem([cartItem.cartItemId])
+
+        if list(data.keys())[0] == 'DeletedCartItemId':
+            self.cartService.removeCartItem(data['DeletedCartItemId'])
+
+        if list(data.keys())[0] == 'orderedCartItemIdList':
+            self.cartService.removeCartItem(data['orderedCartItemIdList'])
+
         return Response(status=status.HTTP_204_NO_CONTENT)
 
