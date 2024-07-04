@@ -1,17 +1,20 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
+from account.repository.profile_repository_impl import ProfileRepositoryImpl
 from account.service.account_service_impl import AccountServiceImpl
 from orders.service.orders_service_impl import OrdersServiceImpl
 from oauth.service.redis_service_impl import RedisServiceImpl
 from product.repository.product_repository_impl import ProductRepositoryImpl
 
+from datetime import datetime
 
 class OrdersView(viewsets.ViewSet):
     ordersService = OrdersServiceImpl.getInstance()
     redisService = RedisServiceImpl.getInstance()
     accountService = AccountServiceImpl.getInstance()
     productRepository = ProductRepositoryImpl.getInstance()
+    profileRepository = ProfileRepositoryImpl.getInstance()
 
     def createCartOrders(self, request):
         try:
@@ -63,3 +66,19 @@ class OrdersView(viewsets.ViewSet):
         except Exception as e:
             print("주문 과정 중 문제 발생:", e)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    def findAccountToNotification(self, request):
+        ordersList = self.ordersService.getAllOrders()
+
+        currentTime = datetime.now().timestamp()
+        email = []
+        lastOrderedDate = []
+        for orders in ordersList:
+            createdDate = datetime.strptime(orders.createdDate, "%Y-%m-%d %H:%M:%S").timestamp()
+            if currentTime - createdDate > 5184000:
+                lastOrderedDate.append(orders.createdDate)
+                profile = self.profileRepository.findById(orders.account_id)
+                email.append(profile.email)
+
+        responseData = {"Email": email, 'OrderedDate': lastOrderedDate}
+        return Response(responseData, status=status.HTTP_200_OK)
