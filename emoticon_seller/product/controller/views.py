@@ -12,7 +12,7 @@ class ProductView(viewsets.ViewSet):
 
     def list(self, request):
         productList = self.productService.list()
-        print('productList : ', productList)
+        # print('productList : ', productList)
         serializer = ProductSerializer(productList, many=True)
         return Response(serializer.data)
 
@@ -27,9 +27,9 @@ class ProductView(viewsets.ViewSet):
             writer = data.get('writer')
             productCategory = data.get('productCategory')
             content = data.get('content')
-            print('writer가 잘 들어왔는지 확인 : ', writer)
-            print('productTitleImage: ', productTitleImage.name)
-            print('productContentImage: ', productContentImage.name)
+            # print('writer가 잘 들어왔는지 확인 : ', writer)
+            # print('productTitleImage: ', productTitleImage.name)
+            # print('productContentImage: ', productContentImage.name)
 
             
 

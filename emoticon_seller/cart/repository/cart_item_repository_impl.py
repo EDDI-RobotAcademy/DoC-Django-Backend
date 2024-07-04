@@ -45,11 +45,11 @@ class CartItemRepositoryImpl(CartItemRepository):
     def findById(self, id):
         return CartItem.objects.get(cartItemId=id)
 
-    def update(self, cartItem):
-        cartItem.save()
 
-    def deleteByCartItemId(self, cartItemId):
-        cartItem = CartItem.objects.get(cartItemId=cartItemId)
-        cartItem.delete()
+    def deleteByCartItemId(self, cartItemIdList):
+        for cartItemId in cartItemIdList:
+            cartItem = CartItem.objects.get(cartItemId=cartItemId)
+            cartItem.delete()
+
 
 
