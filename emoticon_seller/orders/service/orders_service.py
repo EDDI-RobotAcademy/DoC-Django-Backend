@@ -9,3 +9,7 @@ class OrdersService(ABC):
     @abstractmethod
     def createProductOrder(self, account, orderItem):
         pass
+
+    @abstractmethod
+    def getAllOrders(self):
+        pass
