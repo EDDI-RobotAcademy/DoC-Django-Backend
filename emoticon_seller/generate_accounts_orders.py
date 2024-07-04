@@ -39,18 +39,16 @@ def create_account_table(num=3000):
     next_id = get_next_id(Account)
     ids = range(next_id, next_id + num)
 
-    loginType_ids = [1]*num
-    roleType_ids = [1]*num
-    account_df = pd.DataFrame({'id': ids, 'loginType_id': loginType_ids, 'roleType_id': roleType_ids})
+    account_df = pd.DataFrame({'id': ids})
 
     try:
         for _, row in tqdm(account_df.iterrows(), total=account_df.shape[0], desc='Get account data: '):
-            loginType_id = AccountLoginType.objects.get(id=row['loginType_id']).id
-            roleType_id = AccountRoleType.objects.get(id=row['roleType_id']).id
+            loginType = AccountLoginType.objects.get(id=1)
+            roleType = AccountRoleType.objects.get(id=1)
             Account.objects.create(
                 id=row['id'],
-                loginType_id=loginType_id,
-                roleType_id=roleType_id
+                loginType_id=loginType.id,
+                roleType_id=roleType.id
             )
         print('account table 데이터 입력 완료되었습니다.')
     except Exception as e:
@@ -61,9 +59,8 @@ def create_profile_table(num=3000):
     ids = range(next_id, next_id + num)
     emails = [f'user{str(i).zfill(2)}@example.com' for i in range(next_id, next_id + num)]
     nicknames = [f'user{str(i).zfill(2)}' for i in range(next_id, next_id + num)]
-    account_ids = list(Account.objects.values_list('id', flat=True))
 
-    profile_df = pd.DataFrame({'id': ids, 'email': emails, 'nickname':nicknames})#, 'account_id': account_ids})
+    profile_df = pd.DataFrame({'id': ids, 'email': emails, 'nickname':nicknames})
     try:
         for _, row in tqdm(profile_df.iterrows(), total=profile_df.shape[0],  desc='Get profile data: '):
             account = Account.objects.get(id=row['id'])
@@ -78,13 +75,10 @@ def create_profile_table(num=3000):
         print('DB에 데이터 넣는 과정에서 에러 발생', e)
 
 def create_report_table(num=3000):
-    # Report.objects.all().delete()
     next_id = get_next_id(Report)
     ids = range(next_id, next_id + num)
-    # ids = range(1, num + 1)
     ages = np.random.randint(10, 60, size=num)
     genders = np.random.choice(['남성', '여성'], size=num)
-    # account_ids = list(Account.objects.values_list('id', flat=True))
 
     report_df = pd.DataFrame({'id': ids, 'age': ages, 'gender':genders})
 
@@ -103,7 +97,6 @@ def create_report_table(num=3000):
 
 def create_orders_table(num=500):
     # Orders.objects.all().delete()
-    # columns
     # ids = range(1, num + 1)
     next_id = get_next_id(Orders)
     ids = range(next_id, next_id + num)
@@ -122,7 +115,7 @@ def create_orders_table(num=500):
             Orders.objects.create(
                 id=row['id'],
                 createdDate=row['createdDate'],
-                account_id=account.id )
+                account_id=account.id)
         print('orders_item table 데이터 입력 완료되었습니다.')
     except Exception as e:
         print('DB에 데이터 넣는 과정에서 에러 발생', e)
@@ -132,7 +125,6 @@ def create_orders_item_table(num=10000):
     # OrdersItem.objects.all().delete()
     next_id = get_next_id(OrdersItem)
     ids = range(next_id, next_id + num)
-    # ids = range(1, num + 1)
     orders_ids = list(Orders.objects.values_list('id', flat=True))
     orders_ids = random.choices(orders_ids, k=num)
     product_ids = list(Product.objects.values_list('productId', flat=True))
@@ -141,11 +133,11 @@ def create_orders_item_table(num=10000):
     try:
         for _, row in tqdm(orders_item_df.iterrows(), total=orders_item_df.shape[0], desc='Get orders_item data: '):
             orders = Orders.objects.get(id=row['orders_id'])
-            product_id = Product.objects.get(productId=row['product_id'])
+            product = Product.objects.get(productId=row['product_id'])
             OrdersItem.objects.create(
                 id=row['id'],
-                price=product_id.productPrice,
-                product_id=product_id.productId,
+                price=product.productPrice,
+                product_id=product.productId,
                 orders_id=orders.id)
         print('orders_item table 데이터 입력 완료되었습니다.')
     except Exception as e:
