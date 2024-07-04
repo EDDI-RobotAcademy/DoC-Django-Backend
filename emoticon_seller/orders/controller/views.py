@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
@@ -82,3 +83,11 @@ class OrdersView(viewsets.ViewSet):
 
         responseData = {"Email": email, 'OrderedDate': lastOrderedDate}
         return Response(responseData, status=status.HTTP_200_OK)
+
+    def myList(self, request):
+        userToken = request.data.get('userToken')
+        accountId = self.redisService.getValueByKey(userToken)
+        ordersList = self.ordersService.findAllByAccountId(accountId)
+        ordersSerializer = [{'id': orders.id, 'createdDate': orders.createdDate} for orders in ordersList]
+
+        return JsonResponse(ordersSerializer, safe=False, status=status.HTTP_200_OK)

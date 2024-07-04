@@ -29,5 +29,8 @@ class OrdersRepositoryImpl(OrdersRepository):
 
         return ordersList
 
+    def findAllByAccountId(self, accountId):
+        return Orders.objects.filter(account_id=accountId)
+
 
 

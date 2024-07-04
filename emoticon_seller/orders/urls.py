@@ -11,4 +11,5 @@ urlpatterns = [
     path('cart', OrdersView.as_view({'post': 'createCartOrders'}), name='order-cart'),
     path('product', OrdersView.as_view({'post': 'createProductOrders'}), name='order-product'),
     path('notification', OrdersView.as_view({'post': 'findAccountToNotification'}), name='order-notification'),
+    path('list/', OrdersView.as_view({'post': 'myList'}), name='order-list'),
 ]
