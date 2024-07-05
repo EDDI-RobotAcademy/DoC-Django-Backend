@@ -75,3 +75,6 @@ class ReviewRepositoryImpl(ReviewRepository):
     def deleteByReviewID(self, reviewId):
         review = Review.objects.get(reviewId=reviewId)
         review.delete()
+
+    def findAllByProductId(self, productId):
+        return Review.objects.filter(product_id=productId)
