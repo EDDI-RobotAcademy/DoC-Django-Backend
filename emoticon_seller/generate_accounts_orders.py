@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import random
 from decimal import Decimal
+from dateutil.relativedelta import relativedelta
 
 from django.db.models import Max
 from tqdm import tqdm
@@ -31,7 +32,7 @@ warnings.filterwarnings("ignore")
 def get_next_id(model):
     max_id = model.objects.aggregate(max_id=Max('id'))['max_id']
     return (max_id or 0) + 1
-def create_account_table(num=3000):
+def create_account_table(num=1000):
     # CartItem.objects.all().delete()
     # Cart.objects.all().delete()
     # Account.objects.all().delete()
@@ -54,7 +55,7 @@ def create_account_table(num=3000):
     except Exception as e:
         print('DB에 데이터 넣는 과정에서 에러 발생', e)
 
-def create_profile_table(num=3000):
+def create_profile_table(num=1000):
     next_id = get_next_id(Profile)
     ids = range(next_id, next_id + num)
     emails = [f'user{str(i).zfill(2)}@example.com' for i in range(next_id, next_id + num)]
@@ -74,7 +75,7 @@ def create_profile_table(num=3000):
     except Exception as e:
         print('DB에 데이터 넣는 과정에서 에러 발생', e)
 
-def create_report_table(num=3000):
+def create_report_table(num=1000):
     next_id = get_next_id(Report)
     ids = range(next_id, next_id + num)
     ages = np.random.randint(10, 60, size=num)
@@ -95,13 +96,13 @@ def create_report_table(num=3000):
     except Exception as e:
         print('DB에 데이터 넣는 과정에서 에러 발생', e)
 
-def create_orders_table(num=500):
+def create_orders_table(num=3000):
     # Orders.objects.all().delete()
     # ids = range(1, num + 1)
     next_id = get_next_id(Orders)
     ids = range(next_id, next_id + num)
-    startDate = datetime(2024, 6, 1)
-    endDate = datetime(2024, 6, 30, 23, 59, 59)
+    startDate = datetime.now().replace(microsecond=0)  # 현재 시간
+    endDate = (startDate + relativedelta(months=4)).replace(microsecond=0)  # 4개월 후
     createdDates = [startDate + timedelta(
         seconds=random.randint(0, int((endDate - startDate).total_seconds()))) for _ in range(num)]
 
@@ -125,8 +126,17 @@ def create_orders_item_table(num=10000):
     # OrdersItem.objects.all().delete()
     next_id = get_next_id(OrdersItem)
     ids = range(next_id, next_id + num)
-    orders_ids = list(Orders.objects.values_list('id', flat=True))
-    orders_ids = random.choices(orders_ids, k=num)
+    # 기존 orders_ids 가져오기
+    existing_orders_ids = list(Orders.objects.values_list('id', flat=True))
+
+    # 기존 orders_ids를 모두 포함하면서 추가적인 orders_ids를 랜덤하게 선택
+    additional_orders_needed = num - len(existing_orders_ids)
+    if additional_orders_needed > 0:
+        additional_orders_ids = random.choices(existing_orders_ids, k=additional_orders_needed)
+        orders_ids = existing_orders_ids + additional_orders_ids
+    else:
+        orders_ids = random.choices(existing_orders_ids, k=num)
+
     product_ids = list(Product.objects.values_list('productId', flat=True))
     product_ids = random.choices(product_ids, k=num)
     orders_item_df = pd.DataFrame({'id':ids,'orders_id':orders_ids,'product_id':product_ids})
@@ -146,8 +156,8 @@ def create_orders_item_table(num=10000):
 
 # service
 if __name__ == '__main__':
-    create_account_table(1)
-    create_profile_table(1)
-    create_report_table(1)
-    create_orders_table(1)
-    create_orders_item_table(1)
+    create_account_table()
+    create_profile_table()
+    create_report_table()
+    create_orders_table()
+    create_orders_item_table()
