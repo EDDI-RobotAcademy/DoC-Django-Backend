@@ -7,7 +7,7 @@ class ReviewRepository(ABC):
         pass
 
     @abstractmethod
-    def register(self, reviewTitle, reviewWriter, reviewContent,reviewRating ,reviewImage):
+    def register(self, reviewTitle, reviewWriter, reviewContent,reviewRating ,reviewImage, productId):
         pass
 
     @abstractmethod

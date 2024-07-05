@@ -86,7 +86,7 @@ class OrdersView(viewsets.ViewSet):
         responseData = {"Email": email, 'OrderedDate': lastOrderedDate}
         return Response(responseData, status=status.HTTP_200_OK)
 
-    def myList(self, request):
+    def myOrderList(self, request):
         userToken = request.data.get('userToken')
         print('userToken:', userToken)
         accountId = self.redisService.getValueByKey(userToken)
@@ -105,6 +105,15 @@ class OrdersView(viewsets.ViewSet):
                  'totalPrice': totalPrice,
                  'totalQuantity': len(ordersItemList)
                  })
-        # serializedOrdersList = [{'id': orders.id, 'createdDate': orders.createdDate} for orders in ordersList]
 
         return JsonResponse(serializedOrdersList, safe=False, status=status.HTTP_200_OK)
+
+    def myOrderItemList(self, request, pk=None):
+        ordersItemList = self.ordersItemRepository.findAllByOrdersId(pk)
+        serializedOrdersItemList = [{'productId': ordersItem.product.productId,
+                                     'productTitleImage': ordersItem.product.productTitleImage,
+                                     'productName': ordersItem.product.productName,
+                                     'productPrice': ordersItem.product.productPrice}
+                                     for ordersItem in ordersItemList]
+
+        return JsonResponse(serializedOrdersItemList, safe=False, status=status.HTTP_200_OK)

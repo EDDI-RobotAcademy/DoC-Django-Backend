@@ -16,7 +16,7 @@ class ReviewView(viewsets.ViewSet):
         serializer = ReviewSerializer(reviewList, many=True)
         return Response(serializer.data)
 
-    def register(self, request):
+    def register(self, request, pk=None):
         try:
             data = request.data
 
@@ -24,15 +24,22 @@ class ReviewView(viewsets.ViewSet):
             reviewWriter = data.get('reviewWriter')
             reviewContent = data.get('reviewContent')
             reviewRating  = data.get('reviewRating')
+            productId = pk
+            print(productId)
             if request.FILES.get('reviewImage'):
                 reviewImage = request.FILES.get('reviewImage')
             else: reviewImage = None
 
-            if not all([reviewTitle, reviewWriter, reviewContent]):
+            if not all([reviewTitle, reviewWriter, reviewContent, productId]):
                 return Response({'error': '제목, 작성자, 내용은 필수입니다.'},
                                 status=status.HTTP_400_BAD_REQUEST)
 
-            registeredReview = self.reviewService.registerReview(reviewTitle, reviewWriter, reviewContent, reviewRating,reviewImage)
+            registeredReview = self.reviewService.registerReview(reviewTitle,
+                                                                 reviewWriter,
+                                                                 reviewContent,
+                                                                 reviewRating,
+                                                                 reviewImage,
+                                                                 productId)
             serializer = ReviewSerializer(registeredReview)
 
             return Response(serializer.data, status=status.HTTP_200_OK)
