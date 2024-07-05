@@ -13,3 +13,7 @@ class OrdersService(ABC):
     @abstractmethod
     def getAllOrders(self):
         pass
+
+    @abstractmethod
+    def findAllByAccountId(self, accountId):
+        pass

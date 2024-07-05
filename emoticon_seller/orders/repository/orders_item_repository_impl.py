@@ -20,3 +20,6 @@ class OrdersItemRepositoryImpl(OrdersItemRepository):
     def create(self, orders, product, price):
         orderItem = OrdersItem(orders=orders, product=product, price=price)
         orderItem.save()
+
+    def findAllByOrdersId(self, ordersId):
+        return OrdersItem.objects.filter(orders_id=ordersId)

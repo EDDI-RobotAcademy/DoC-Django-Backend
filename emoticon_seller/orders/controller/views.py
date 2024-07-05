@@ -1,8 +1,10 @@
+from django.http import JsonResponse
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
 from account.repository.profile_repository_impl import ProfileRepositoryImpl
 from account.service.account_service_impl import AccountServiceImpl
+from orders.repository.orders_item_repository_impl import OrdersItemRepositoryImpl
 from orders.service.orders_service_impl import OrdersServiceImpl
 from oauth.service.redis_service_impl import RedisServiceImpl
 from product.repository.product_repository_impl import ProductRepositoryImpl
@@ -15,6 +17,7 @@ class OrdersView(viewsets.ViewSet):
     accountService = AccountServiceImpl.getInstance()
     productRepository = ProductRepositoryImpl.getInstance()
     profileRepository = ProfileRepositoryImpl.getInstance()
+    ordersItemRepository = OrdersItemRepositoryImpl.getInstance()
 
     def createCartOrders(self, request):
         try:
@@ -82,3 +85,26 @@ class OrdersView(viewsets.ViewSet):
 
         responseData = {"Email": email, 'OrderedDate': lastOrderedDate}
         return Response(responseData, status=status.HTTP_200_OK)
+
+    def myList(self, request):
+        userToken = request.data.get('userToken')
+        print('userToken:', userToken)
+        accountId = self.redisService.getValueByKey(userToken)
+        ordersList = self.ordersService.findAllByAccountId(accountId)
+        serializedOrdersList = []
+
+        for orders in ordersList:
+            totalPrice = 0
+            ordersItemList = self.ordersItemRepository.findAllByOrdersId(orders.id)
+            for ordersItem in ordersItemList:
+                totalPrice += ordersItem.price
+
+            serializedOrdersList.append(
+                {'ordersId': orders.id,
+                 'createdDate': orders.createdDate,
+                 'totalPrice': totalPrice,
+                 'totalQuantity': len(ordersItemList)
+                 })
+        # serializedOrdersList = [{'id': orders.id, 'createdDate': orders.createdDate} for orders in ordersList]
+
+        return JsonResponse(serializedOrdersList, safe=False, status=status.HTTP_200_OK)
