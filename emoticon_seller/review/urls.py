@@ -13,5 +13,6 @@ urlpatterns = [
     path('read/<int:pk>', ReviewView.as_view({'get': 'read'}), name='review-read'),
     path('modify/<int:pk>', ReviewView.as_view({'put': 'modifyReview'}), name='review-modify'),
     path('delete/<int:pk>', ReviewView.as_view({'delete': 'removeReview'}), name='review-remove'),
+    path('product/list/<int:pk>', ReviewView.as_view({'get': 'productReviewList'}), name='review-product-list'),
 ]
 

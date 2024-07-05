@@ -34,3 +34,6 @@ class ReviewServiceImpl(ReviewService):
 
     def removeReview(self, reviewId):
         return self.__reviewRepository.deleteByReviewID(reviewId)
+
+    def productReviewList(self, productId):
+        return self.__reviewRepository.findAllByProductId(productId)

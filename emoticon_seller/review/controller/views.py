@@ -66,3 +66,9 @@ class ReviewView(viewsets.ViewSet):
     def removeReview(self, request, pk=None):
         self.reviewService.removeReview(pk)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def productReviewList(self, request, pk=None):
+        print(f"pk: {pk}")
+        productReviewList = self.reviewService.productReviewList(pk)
+        serializer = ReviewSerializer(productReviewList, many=True)
+        return Response(serializer.data)
