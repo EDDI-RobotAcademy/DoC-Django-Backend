@@ -21,3 +21,7 @@ class ReviewService(ABC):
     @abstractmethod
     def removeReview(self, reviewId):
         pass
+
+    @abstractmethod
+    def productReviewList(self, productId):
+        pass

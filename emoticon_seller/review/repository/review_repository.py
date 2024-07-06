@@ -21,3 +21,7 @@ class ReviewRepository(ABC):
     @abstractmethod
     def deleteByReviewID(self, reviewId):
         pass
+
+    @abstractmethod
+    def findAllByProductId(self, productId):
+        pass
