@@ -85,6 +85,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD')
 
 KAKAO = {
     'LOGIN_URL': os.getenv('KAKAO_LOGIN_URL'),

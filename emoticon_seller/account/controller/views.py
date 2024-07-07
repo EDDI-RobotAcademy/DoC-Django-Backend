@@ -5,6 +5,7 @@ from account.repository.account_role_type_repository_impl import AccountRoleType
 from account.repository.profile_repository_impl import ProfileRepositoryImpl
 from account.serializers import AccountSerializer
 from account.service.account_service_impl import AccountServiceImpl
+from emoticon_seller import settings
 from oauth.service.redis_service_impl import RedisServiceImpl
 
 
@@ -46,12 +47,16 @@ class AccountView(viewsets.ViewSet):
         try:
             nickname = request.data.get('nickname')
             email = request.data.get('email')
+            isAdmin = request.data.get('isAdmin')
             isBusiness = request.data.get('isBusiness')
 
-            if isBusiness:
+            if isAdmin:
+                roleType = 'ADMIN'
+            elif isBusiness:
                 roleType = 'SELLER'
             else:
                 roleType = 'CUSTOMER'
+
 
             account = self.accountService.registerAccount(
                 loginType='KAKAO',
@@ -65,13 +70,6 @@ class AccountView(viewsets.ViewSet):
         except Exception as e:
             print("계정 생성 중 에러 발생:", e)
             return Response(status=status.HTTP_400_BAD_REQUEST)
-
-    # def getNickname(self, request):
-    #     email = request.data.get('email')
-    #     print(f"email: {email}")
-    #     profile = self.profileRepository.findByEmail(email)
-    #     nickname = profile.nickname
-    #     return Response(nickname, status=status.HTTP_200_OK)
 
     def getNickname(self, request):
         userToken = request.data.get('userToken')
@@ -97,3 +95,8 @@ class AccountView(viewsets.ViewSet):
         accountRoleTypeId = account.roleType_id
         roleType = self.accountRoleTypeRepository.findRoleTypeById(accountRoleTypeId)
         return Response(roleType, status=status.HTTP_200_OK)
+
+    def getAdminPassword(self, request):
+        correctAdminPassword = settings.ADMIN_PASSWORD
+        return Response(correctAdminPassword, status=status.HTTP_200_OK)
+
