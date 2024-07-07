@@ -70,22 +70,6 @@ class OrdersView(viewsets.ViewSet):
             print("주문 과정 중 문제 발생:", e)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    def findAccountToNotification(self, request):
-        ordersList = self.ordersService.getAllOrders()
-
-        currentTime = datetime.now().timestamp()
-        email = []
-        lastOrderedDate = []
-        for orders in ordersList:
-            createdDate = datetime.strptime(orders.createdDate, "%Y-%m-%d %H:%M:%S").timestamp()
-            if currentTime - createdDate > 5184000:
-                lastOrderedDate.append(orders.createdDate)
-                profile = self.profileRepository.findById(orders.account_id)
-                email.append(profile.email)
-
-        responseData = {"Email": email, 'OrderedDate': lastOrderedDate}
-        return Response(responseData, status=status.HTTP_200_OK)
-
     def myOrderList(self, request):
         userToken = request.data.get('userToken')
         print('userToken:', userToken)
