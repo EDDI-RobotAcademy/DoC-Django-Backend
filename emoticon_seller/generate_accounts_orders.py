@@ -122,24 +122,73 @@ def create_orders_table(num=3000):
         print('DB에 데이터 넣는 과정에서 에러 발생', e)
 
 
-def create_orders_item_table(num=10000):
-    # OrdersItem.objects.all().delete()
-    next_id = get_next_id(OrdersItem)
-    ids = range(next_id, next_id + num)
-    # 기존 orders_ids 가져오기
-    existing_orders_ids = list(Orders.objects.values_list('id', flat=True))
+def get_products_by_category(productCategory):
+    selectedProductId = list(Product.objects.filter(productCategory =productCategory).values_list('productId', flat=True))
+    return selectedProductId
 
-    # 기존 orders_ids를 모두 포함하면서 추가적인 orders_ids를 랜덤하게 선택
+def choose_products_based_on_preferences(num, orders_ids):
+    id_of_cute_products = get_products_by_category('귀여운')
+    id_of_fun_products = get_products_by_category('재밌는')
+    id_of_message_products = get_products_by_category('메시지')
+
+    product_ids = []
+
+    for _, row in tqdm(orders_ids.iterrows(), total=orders_ids.shape[0], desc='데이터 조작중 ... : '):
+        order = Orders.objects.get(id=row['orders_id'])
+        account_id = order.account_id
+        report = Report.objects.get(account_id=account_id)
+        age = report.age
+        gender = report.gender
+
+        if 10 <= age <= 20:
+            if gender == '여성':
+                categories = [id_of_cute_products] * int(num * 0.6) + [id_of_fun_products] * int(num * 0.35) + [
+                    id_of_message_products] * int(num * 0.05)
+            else:
+                categories = [id_of_cute_products] * int(num * 0.27) + [id_of_fun_products] * int(num * 0.7) + [
+                    id_of_message_products] * int(num * 0.03)
+        elif 21 <= age <= 30:
+            categories = [id_of_cute_products] * int(num * 0.5) + [id_of_fun_products] * int(num * 0.3) + [id_of_message_products] * int(
+                num * 0.2)
+        elif 31 <= age <= 40:
+            categories = [id_of_cute_products] * int(num * 0.5) + [id_of_fun_products] * int(num * 0.1) + [id_of_message_products] * int(
+                num * 0.4)
+        else:
+            categories = [id_of_message_products] * int(num * 0.75) + [id_of_cute_products] * int(num * 0.2) + [id_of_fun_products] * int(
+                num * 0.05)
+
+        # random.shuffle(categories)  # 랜덤 선택을 위해 섞기
+
+        for category in categories:
+            product_id = random.choice(category)
+            product_ids.append(product_id)
+
+    return product_ids
+def create_orders_item_table(num=10000):
+    # next_id = get_next_id(OrdersItem)
+    existing_orders_ids = list(Orders.objects.values_list('id', flat=True))
     additional_orders_needed = num - len(existing_orders_ids)
     if additional_orders_needed > 0:
         additional_orders_ids = random.choices(existing_orders_ids, k=additional_orders_needed)
         orders_ids = existing_orders_ids + additional_orders_ids
-    else:
-        orders_ids = random.choices(existing_orders_ids, k=num)
+    # orders_ids를 사용하여 DataFrame 생성
+    orders_df = pd.DataFrame({'orders_id': orders_ids})
+    print('주문아이디 :', orders_df['orders_id'].nunique(), '주문 아이템 총 :',orders_df['orders_id'].count())
+    # 상품 ID를 연령대 및 성별에 따라 선택
+    selected_product_ids = choose_products_based_on_preferences(num, orders_df)
+    orders_item_data = []
+    for i in range(len(orders_ids)):
+        order_id = orders_ids[i]
+        product_id = selected_product_ids[i]
 
-    product_ids = list(Product.objects.values_list('productId', flat=True))
-    product_ids = random.choices(product_ids, k=num)
-    orders_item_df = pd.DataFrame({'id':ids,'orders_id':orders_ids,'product_id':product_ids})
+        orders_item_data.append({
+            'id': i+1,
+            'orders_id': order_id,
+            'product_id': product_id
+            })
+
+    orders_item_df = pd.DataFrame(orders_item_data)
+    print('만들어진 orders_item : ',orders_item_df)
     try:
         for _, row in tqdm(orders_item_df.iterrows(), total=orders_item_df.shape[0], desc='Get orders_item data: '):
             orders = Orders.objects.get(id=row['orders_id'])
@@ -148,16 +197,17 @@ def create_orders_item_table(num=10000):
                 id=row['id'],
                 price=product.productPrice,
                 product_id=product.productId,
-                orders_id=orders.id)
+                orders_id=orders.id
+            )
         print('orders_item table 데이터 입력 완료되었습니다.')
     except Exception as e:
         print('DB에 데이터 넣는 과정에서 에러 발생', e)
 
-
 # service
 if __name__ == '__main__':
-    create_account_table()
-    create_profile_table()
-    create_report_table()
-    create_orders_table()
+    # create_account_table()
+    # create_profile_table()
+    # create_report_table()
+    # create_orders_table()
     create_orders_item_table()
+
