@@ -11,4 +11,5 @@ urlpatterns = [
     path('list/', ProductView.as_view({'get': 'list'}), name='product-list'),
     path('register', ProductView.as_view({'post': 'register'}), name='product-register'),
     path('read/<int:pk>', ProductView.as_view({'get': 'readProduct'}), name='product-read'),
+    path('random/list/', ProductView.as_view({'get': 'randomProductList'}), name='product-random-list'),
 ]

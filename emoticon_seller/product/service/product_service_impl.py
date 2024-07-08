@@ -1,3 +1,5 @@
+import random
+
 from product.repository.product_repository_impl import ProductRepositoryImpl
 from product.service.product_service import ProductService
 
@@ -26,4 +28,10 @@ class ProductServiceImpl(ProductService):
 
     def readProduct(self, productId):
         return self.__productRepository.findByProductId(productId)
+
+    def randomList(self, productCategory):
+        productByCategory = self.__productRepository.findAllByProductCategory(productCategory)
+        randomNumbers = random.sample(range(0, 33), 4)
+        productByRandomNumbers = [productByCategory[idx] for idx in randomNumbers]
+        return productByRandomNumbers
 

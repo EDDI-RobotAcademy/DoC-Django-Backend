@@ -1,3 +1,5 @@
+import random
+
 from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
@@ -50,3 +52,9 @@ class ProductView(viewsets.ViewSet):
         product = self.productService.readProduct(pk)
         serializer = ProductSerializer(product)
         return Response(serializer.data)
+
+    def randomProductList(self, request):
+        productCategory = request.query_params.get('productCategory')
+        productByRandomNumbers = self.productService.randomList(productCategory)
+        serializer = ProductSerializer(productByRandomNumbers, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
