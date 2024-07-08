@@ -12,3 +12,7 @@ class ProductService(ABC):
     @abstractmethod
     def readProduct(self, productId):
         pass
+
+    @abstractmethod
+    def randomList(self, productCategory):
+        pass
