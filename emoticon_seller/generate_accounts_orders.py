@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import numpy as np
 import random
-from decimal import Decimal
+from itertools import chain
 from dateutil.relativedelta import relativedelta
 
 from django.db.models import Max
@@ -126,12 +126,66 @@ def get_products_by_category(productCategory):
     selectedProductId = list(Product.objects.filter(productCategory =productCategory).values_list('productId', flat=True))
     return selectedProductId
 
-def choose_products_based_on_preferences(num, orders_ids):
+
+def generate_product_ids_by_preferences(age, gender, num):
     id_of_cute_products = get_products_by_category('귀여운')
     id_of_fun_products = get_products_by_category('재밌는')
     id_of_message_products = get_products_by_category('메시지')
 
+    if 10 <= age <= 20:
+        if gender == '여성':
+            cute_count = int(num * 0.66)
+            fun_count = int(num * 0.33)
+            message_count = int(num * 0.01)
+        else:
+            cute_count = int(num * 0.09)
+            fun_count = int(num * 0.9)
+            message_count = int(num * 0.01)
+    elif 21 <= age <= 30:
+        if gender == '여성':
+            cute_count = int(num * 0.67)
+            fun_count = int(num * 0.3)
+            message_count = int(num * 0.03)
+        else:
+            cute_count = int(num * 0.09)
+            fun_count = int(num * 0.9)
+            message_count = int(num * 0.01)
+    elif 31 <= age <= 40:
+        if gender == '여성':
+            cute_count = int(num * 0.3)
+            fun_count = int(num * 0.05)
+            message_count = int(num * 0.65)
+        else:
+            cute_count = int(num * 0.1)
+            fun_count = int(num * 0.01)
+            message_count = int(num * 0.89)
+    else:
+        cute_count = int(num * 0.09)
+        fun_count = int(num * 0.01)
+        message_count = int(num * 0.9)
+
+    cute_products = random.choices(id_of_cute_products, k=cute_count)
+    fun_products = random.choices(id_of_fun_products, k=fun_count)
+    message_products = random.choices(id_of_message_products, k=message_count)
+
+    combined_products = list(chain(cute_products, fun_products, message_products))
+    random.shuffle(combined_products)
+
+    return combined_products
+
+
+def choose_products_based_on_preferences(num, orders_ids):
     product_ids = []
+    products_by_conditions = {
+        "10-20여성": generate_product_ids_by_preferences(15, "여성", num),
+        "10-20남성": generate_product_ids_by_preferences(15, "남성", num),
+        "21-30여성": generate_product_ids_by_preferences(25, "여성", num),
+        "21-30남성": generate_product_ids_by_preferences(25, "남성", num),
+        "31-40여성": generate_product_ids_by_preferences(35, "여성", num),
+        "31-40남성": generate_product_ids_by_preferences(35, "남성", num),
+        "40+여성": generate_product_ids_by_preferences(45, "여성", num),
+        "40+남성": generate_product_ids_by_preferences(45, "남성", num),
+    }
 
     for _, row in tqdm(orders_ids.iterrows(), total=orders_ids.shape[0], desc='데이터 조작중 ... : '):
         order = Orders.objects.get(id=row['orders_id'])
@@ -141,54 +195,51 @@ def choose_products_based_on_preferences(num, orders_ids):
         gender = report.gender
 
         if 10 <= age <= 20:
-            if gender == '여성':
-                categories = [id_of_cute_products] * int(num * 0.6) + [id_of_fun_products] * int(num * 0.35) + [
-                    id_of_message_products] * int(num * 0.05)
-            else:
-                categories = [id_of_cute_products] * int(num * 0.27) + [id_of_fun_products] * int(num * 0.7) + [
-                    id_of_message_products] * int(num * 0.03)
+            condition_key = "10-20여성" if gender == "여성" else "10-20남성"
         elif 21 <= age <= 30:
-            categories = [id_of_cute_products] * int(num * 0.5) + [id_of_fun_products] * int(num * 0.3) + [id_of_message_products] * int(
-                num * 0.2)
+            condition_key = "21-30여성" if gender == "여성" else "21-30남성"
         elif 31 <= age <= 40:
-            categories = [id_of_cute_products] * int(num * 0.5) + [id_of_fun_products] * int(num * 0.1) + [id_of_message_products] * int(
-                num * 0.4)
+            condition_key = "31-40여성" if gender == "여성" else "31-40남성"
         else:
-            categories = [id_of_message_products] * int(num * 0.75) + [id_of_cute_products] * int(num * 0.2) + [id_of_fun_products] * int(
-                num * 0.05)
+            condition_key = "40+여성" if gender == "여성" else "40+남성"
 
-        # random.shuffle(categories)  # 랜덤 선택을 위해 섞기
+        selected_product_ids = products_by_conditions[condition_key]
 
-        for category in categories:
-            product_id = random.choice(category)
-            product_ids.append(product_id)
+        if len(selected_product_ids) >= num:
+            product_ids.extend(selected_product_ids[:num])
+            products_by_conditions[condition_key] = selected_product_ids[num:]
+        elif selected_product_ids:
+            product_ids.extend(selected_product_ids)
+            additional_needed = num - len(selected_product_ids)
+            additional_products = random.choices(selected_product_ids, k=additional_needed)
+            product_ids.extend(additional_products)
 
     return product_ids
 def create_orders_item_table(num=10000):
-    # next_id = get_next_id(OrdersItem)
     existing_orders_ids = list(Orders.objects.values_list('id', flat=True))
     additional_orders_needed = num - len(existing_orders_ids)
     if additional_orders_needed > 0:
         additional_orders_ids = random.choices(existing_orders_ids, k=additional_orders_needed)
         orders_ids = existing_orders_ids + additional_orders_ids
-    # orders_ids를 사용하여 DataFrame 생성
+
     orders_df = pd.DataFrame({'orders_id': orders_ids})
-    print('주문아이디 :', orders_df['orders_id'].nunique(), '주문 아이템 총 :',orders_df['orders_id'].count())
-    # 상품 ID를 연령대 및 성별에 따라 선택
+    print('주문아이디 :', orders_df['orders_id'].nunique(), '주문 아이템 총 :', orders_df['orders_id'].count())
+
     selected_product_ids = choose_products_based_on_preferences(num, orders_df)
+
     orders_item_data = []
     for i in range(len(orders_ids)):
         order_id = orders_ids[i]
         product_id = selected_product_ids[i]
 
         orders_item_data.append({
-            'id': i+1,
+            'id': i + 1,
             'orders_id': order_id,
             'product_id': product_id
-            })
+        })
 
     orders_item_df = pd.DataFrame(orders_item_data)
-    print('만들어진 orders_item : ',orders_item_df)
+    print('만들어진 orders_item : ', orders_item_df)
     try:
         for _, row in tqdm(orders_item_df.iterrows(), total=orders_item_df.shape[0], desc='Get orders_item data: '):
             orders = Orders.objects.get(id=row['orders_id'])
