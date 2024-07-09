@@ -101,8 +101,9 @@ def create_orders_table(num=3000):
     # ids = range(1, num + 1)
     next_id = get_next_id(Orders)
     ids = range(next_id, next_id + num)
-    startDate = datetime.now().replace(microsecond=0)  # 현재 시간
-    endDate = (startDate + relativedelta(months=4)).replace(microsecond=0)  # 4개월 후
+
+    endDate = datetime.now().replace(microsecond=0)  # 현재 시간
+    startDate = (endDate - relativedelta(months=4)).replace(microsecond=0) # 4개월 전
     createdDates = [startDate + timedelta(
         seconds=random.randint(0, int((endDate - startDate).total_seconds()))) for _ in range(num)]
 
