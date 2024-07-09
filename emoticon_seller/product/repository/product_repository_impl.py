@@ -61,6 +61,12 @@ class ProductRepositoryImpl(ProductRepository):
         except Product.DoesNotExist:
             return None
 
+    def findByProdictIdList(self, productIdList):
+        try:
+            return Product.objects.filter(productId__in=productIdList)
+        except Product.DoesNotExist:
+            return None
+
     def findAllByProductCategory(self, productCategory):
         return Product.objects.filter(productCategory=productCategory)
 
