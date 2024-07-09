@@ -35,3 +35,6 @@ class ProductServiceImpl(ProductService):
         productByRandomNumbers = [productByCategory[idx] for idx in randomNumbers]
         return productByRandomNumbers
 
+    def recommendList(self, recommendProductIdList):
+        return self.__productRepository.findByProdictIdList(recommendProductIdList)
+

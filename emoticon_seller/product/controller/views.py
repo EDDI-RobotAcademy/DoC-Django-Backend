@@ -58,3 +58,11 @@ class ProductView(viewsets.ViewSet):
         productByRandomNumbers = self.productService.randomList(productCategory)
         serializer = ProductSerializer(productByRandomNumbers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def recommendProductList(self, request):
+        recommendProductIdList = request.data['recommendProductIdList']
+        print(f"recommendProductIdList: {recommendProductIdList}")
+        recommendProductList = self.productService.recommendList(recommendProductIdList)
+        serializer = ProductSerializer(recommendProductList, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)

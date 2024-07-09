@@ -16,3 +16,7 @@ class ProductService(ABC):
     @abstractmethod
     def randomList(self, productCategory):
         pass
+
+    @abstractmethod
+    def recommendList(self, recommendProductIdList):
+        pass
