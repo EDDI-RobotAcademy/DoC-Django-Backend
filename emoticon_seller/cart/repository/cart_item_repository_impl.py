@@ -21,12 +21,11 @@ class CartItemRepositoryImpl(CartItemRepository):
 
     def register(self, cartData, cart, product):
         productPrice = cartData.get('productPrice')
-        quantity = cartData.get('quantity')
 
         CartItem.objects.create(
             cart=cart,
             product=product,
-            quantity=quantity,
+            quantity=1,
             price=productPrice
         )
 
@@ -50,6 +49,13 @@ class CartItemRepositoryImpl(CartItemRepository):
         for cartItemId in cartItemIdList:
             cartItem = CartItem.objects.get(cartItemId=cartItemId)
             cartItem.delete()
+
+    def checkDuplication(self, cartItemList, productId):
+        for cartItem in cartItemList:
+            if cartItem.product.productId == productId:
+                return True
+
+        return False
 
 
 
