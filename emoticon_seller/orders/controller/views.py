@@ -101,3 +101,16 @@ class OrdersView(viewsets.ViewSet):
                                      for ordersItem in ordersItemList]
 
         return JsonResponse(serializedOrdersItemList, safe=False, status=status.HTTP_200_OK)
+
+    def checkOrderItemDuplication(self, request):
+        # print(request.data['payload']['userToken'])
+        userToken = request.data['payload']['userToken']
+        productId = request.data['payload']['productId']
+
+        accountId = self.redisService.getValueByKey(userToken)
+        ordersList = self.ordersService.findAllByAccountId(accountId)
+        ordersIdList = [orders.id for orders in ordersList]
+        allOrdersItemList = [self.ordersItemRepository.findAllByOrdersId(ordersId) for ordersId in ordersIdList]
+        isDuplicate = self.ordersItemRepository.checkDuplication(allOrdersItemList, productId)
+        print(f"isDuplicate: {isDuplicate}")
+        return Response(isDuplicate, status=status.HTTP_200_OK)
