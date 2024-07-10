@@ -8,7 +8,7 @@ class RecommendProduct(models.Model):
     account = models.OneToOneField(Account, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"RecommendProduct -> idList: {self.idList}"
+        return f"RecommendProduct -> productIdList: {self.productIdList}"
 
     class Meta:
         db_table = 'recommend_product'

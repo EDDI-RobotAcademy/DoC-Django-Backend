@@ -26,4 +26,10 @@ urlpatterns = [
     path('admin/password',
          AccountView.as_view({'post': 'getAdminPassword'}),
          name='account-admin-password'),
+    path('recommend/register',
+         AccountView.as_view({'post': 'registerRecommend'}),
+         name='account-recommend-register'),
+    path('recommend/list',
+         AccountView.as_view({'post': 'recommendProductIdList'}),
+         name='account-recommend-list'),
 ]
