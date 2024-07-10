@@ -3,6 +3,7 @@ from rest_framework.response import Response
 
 from account.repository.account_role_type_repository_impl import AccountRoleTypeRepositoryImpl
 from account.repository.profile_repository_impl import ProfileRepositoryImpl
+from account.repository.recommend_product_repository_impl import RecommendProductRepositoryImpl
 from account.serializers import AccountSerializer
 from account.service.account_service_impl import AccountServiceImpl
 from emoticon_seller import settings
@@ -14,6 +15,7 @@ class AccountView(viewsets.ViewSet):
     redisService = RedisServiceImpl.getInstance()
     profileRepository = ProfileRepositoryImpl.getInstance()
     accountRoleTypeRepository = AccountRoleTypeRepositoryImpl.getInstance()
+    recommendProductRepository = RecommendProductRepositoryImpl.getInstance()
 
     def checkEmailDuplication(self, request):
         # url = self.oauthService.kakaoLoginAddress()
@@ -99,4 +101,24 @@ class AccountView(viewsets.ViewSet):
     def getAdminPassword(self, request):
         correctAdminPassword = settings.ADMIN_PASSWORD
         return Response(correctAdminPassword, status=status.HTTP_200_OK)
+
+    def registerRecommend(self, request):
+        userToken = request.data.get('userToken')
+        accountId = self.redisService.getValueByKey(userToken)
+        account = self.accountService.findAccountById(accountId)
+        recommendProductIdList = request.data.get('recommendProductIdList')
+        print(f"recommendProductIdList: {recommendProductIdList}")
+        self.recommendProductRepository.create(recommendProductIdList, account)
+
+        return Response(status=status.HTTP_200_OK)
+
+    def recommendProductIdList(self, request):
+        userToken = request.data.get('userToken')
+        accountId = self.redisService.getValueByKey(userToken)
+        account = self.accountService.findAccountById(accountId)
+        recommendProduct = self.recommendProductRepository.findByAccount(account)
+        recommendProductIdList = recommendProduct.productIdList
+
+        return Response(recommendProductIdList, status=status.HTTP_200_OK)
+
 

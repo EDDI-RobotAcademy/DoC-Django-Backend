@@ -257,9 +257,9 @@ def create_orders_item_table(num=10000):
 
 # service
 if __name__ == '__main__':
-    # create_account_table()
-    # create_profile_table()
-    # create_report_table()
-    # create_orders_table()
+    create_account_table()
+    create_profile_table()
+    create_report_table()
+    create_orders_table()
     create_orders_item_table()
 
