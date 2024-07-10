@@ -26,3 +26,7 @@ class CartItemRepository(ABC):
     def deleteByCartItemId(self, cartItemIdList):
         pass
 
+    @abstractmethod
+    def checkDuplication(self, cartItemList, productId):
+        pass
+

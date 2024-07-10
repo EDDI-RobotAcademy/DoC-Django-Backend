@@ -2,14 +2,20 @@ from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
+from account.service.account_service_impl import AccountServiceImpl
 from cart.entity.cart_item import CartItem
+from cart.repository.cart_item_repository_impl import CartItemRepositoryImpl
+from cart.repository.cart_repository_impl import CartRepositoryImpl
 from cart.service.cart_service_impl import CartServiceImpl
 from oauth.service.redis_service_impl import RedisServiceImpl
 
 
 class CartView(viewsets.ViewSet):
     cartService = CartServiceImpl.getInstance()
+    cartRepository = CartRepositoryImpl.getInstance()
+    cartItemRepository = CartItemRepositoryImpl.getInstance()
     redisService = RedisServiceImpl.getInstance()
+    accountService = AccountServiceImpl.getInstance()
 
     def cartItemList(self, request):
         data = request.data
@@ -53,4 +59,16 @@ class CartView(viewsets.ViewSet):
             self.cartService.removeCartItem(data['CartItemId'])
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def checkCartItemDuplication(self, request):
+        userToken = request.data['payload']['userToken']
+        productId = request.data['payload']['productId']
+
+        accountId = self.redisService.getValueByKey(userToken)
+        account = self.accountService.findAccountById(accountId)
+        cart = self.cartRepository.findByAccount(account)
+        cartItemList = self.cartItemRepository.findByCart(cart)
+        isDuplicate = self.cartItemRepository.checkDuplication(cartItemList, productId)
+        print(f"isDuplicate: {isDuplicate}")
+        return Response(isDuplicate, status=status.HTTP_200_OK)
 

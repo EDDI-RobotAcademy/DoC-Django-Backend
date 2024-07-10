@@ -50,5 +50,12 @@ class CartItemRepositoryImpl(CartItemRepository):
             cartItem = CartItem.objects.get(cartItemId=cartItemId)
             cartItem.delete()
 
+    def checkDuplication(self, cartItemList, productId):
+        for cartItem in cartItemList:
+            if cartItem.product.productId == productId:
+                return True
+
+        return False
+
 
 

@@ -103,7 +103,6 @@ class OrdersView(viewsets.ViewSet):
         return JsonResponse(serializedOrdersItemList, safe=False, status=status.HTTP_200_OK)
 
     def checkOrderItemDuplication(self, request):
-        # print(request.data['payload']['userToken'])
         userToken = request.data['payload']['userToken']
         productId = request.data['payload']['productId']
 
