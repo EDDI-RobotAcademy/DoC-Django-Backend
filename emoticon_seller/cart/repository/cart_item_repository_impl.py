@@ -21,12 +21,11 @@ class CartItemRepositoryImpl(CartItemRepository):
 
     def register(self, cartData, cart, product):
         productPrice = cartData.get('productPrice')
-        quantity = cartData.get('quantity')
 
         CartItem.objects.create(
             cart=cart,
             product=product,
-            quantity=quantity,
+            quantity=1,
             price=productPrice
         )
 
