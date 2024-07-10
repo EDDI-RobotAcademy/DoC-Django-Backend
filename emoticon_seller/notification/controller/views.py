@@ -30,8 +30,6 @@ class NotificationView(viewsets.ViewSet):
             else:
                 lastOrderedDate = list(ordersListByAccountId.values_list('createdDate', flat=True))[0]
 
-            lastOrderedDate = datetime.strptime(lastOrderedDate, "%Y-%m-%d %H:%M:%S")
-
             if currentTime - lastOrderedDate.timestamp() > standardDate:
                 serializedAccountList.append({
                     'accountId': accountId,
