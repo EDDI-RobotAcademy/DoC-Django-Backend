@@ -89,13 +89,19 @@ class AccountView(viewsets.ViewSet):
         userToken = request.data.get('userToken')
         if not userToken:
             return Response(None, status=status.HTTP_200_OK)
-        # print(f"userToken: {userToken}")
+
         accountId = self.redisService.getValueByKey(userToken)
-        # print(f"accountId: {accountId}")
+        if not accountId:
+            return Response(None, status=status.HTTP_200_OK)
+
         account = self.accountService.findAccountById(accountId)
-        print(f"account: {account}")
-        accountRoleTypeId = account.roleType_id
-        roleType = self.accountRoleTypeRepository.findRoleTypeById(accountRoleTypeId)
+        if not account:
+            return Response(None, status=status.HTTP_200_OK)
+
+        roleType = self.accountRoleTypeRepository.findRoleTypeById(account.roleType_id)
+        if not roleType:
+            return Response(None, status=status.HTTP_200_OK)
+
         return Response(roleType, status=status.HTTP_200_OK)
 
     def getAdminPassword(self, request):
